@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0065_ecommercefeatureroleassignment_applies_to_all_contexts'),
+        ('core', '0066_remove_account_microfrontend_url_field_from_SiteConfiguration'),
     ]
 
     operations = [
