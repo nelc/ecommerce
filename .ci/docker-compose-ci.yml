@@ -10,7 +10,11 @@ services:
       MYSQL_ROOT_PASSWORD: "password"
       MYSQL_DATABASE: "ecommerce"
   ecommerce:
-    image: edxops/ecommerce:latest
+    build:
+      context: ../.
+      target: dev
+      args:
+        PYTHON_VERSION: $PYTHON_VERSION
     container_name: ecommerce_testing
     volumes:
       - ..:/edx/app/ecommerce/ecommerce

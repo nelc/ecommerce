@@ -1,6 +1,6 @@
 NODE_BIN=./node_modules/.bin
 DIFF_COVER_BASE_BRANCH=master
-PYTHON_ENV=py38
+PYTHON_ENV=$(if $(PYTHON_ENV),$(PYTHON_ENV),py312)
 DJANGO_ENV_VAR=$(if $(DJANGO_ENV),$(DJANGO_ENV),django32)
 
 help:
@@ -172,6 +172,15 @@ upgrade: $(COMMON_CONSTRAINTS_TXT)
 
 docs:
 	tox -e docs
+
+quality-and-jobs:
+	requirements.js check_translations_up_to_date validate_translations clean_static static quality validate_js check_keywords
+
+test-python:
+	requirements.js clean_static static validate_python
+
+acceptance-python:
+	requirements.js clean_static static acceptance
 
 # Targets in a Makefile which do not produce an output file with the same name as the target name
 .PHONY: help requirements migrate serve clean validate_python quality validate_js validate html_coverage e2e \

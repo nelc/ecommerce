@@ -1,17 +1,22 @@
 FROM ubuntu:focal as app
 
+# Define 3.12 as default but it changes to the PYTHON_VERSION passed as argument
+ARG PYTHON_VERSION=3.12
+
 ENV DEBIAN_FRONTEND noninteractive
 # System requirements.
 RUN apt update && \
+  apt-get install -y software-properties-common && \
+  apt-add-repository -y ppa:deadsnakes/ppa && \
   apt-get install -qy \
   curl \
   gettext \
   git \
   language-pack-en \
   build-essential \
-  python3.8-dev \
-  python3-virtualenv \
-  python3.8-distutils \
+  python${PYTHON_VERSION} \
+  python${PYTHON_VERSION}-dev \
+  python${PYTHON_VERSION}-distutils \
   libmysqlclient-dev \
   libssl-dev \
   libcairo2-dev && \
@@ -34,11 +39,15 @@ ARG ECOMMERCE_NODEENV_DIR="${ECOMMERCE_APP_DIR}/nodeenvs/${SERVICE_NAME}"
 ENV ECOMMERCE_CFG "${COMMON_CFG_DIR}/ecommerce.yml"
 ENV ECOMMERCE_CODE_DIR "${ECOMMERCE_CODE_DIR}"
 ENV ECOMMERCE_APP_DIR "${ECOMMERCE_APP_DIR}"
+ENV PYTHON_VERSION "${PYTHON_VERSION}"
+
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION}
+RUN pip install virtualenv
 
 # Add virtual env and node env to PATH, in order to activate them
 ENV PATH "${ECOMMERCE_VENV_DIR}/bin:${ECOMMERCE_NODEENV_DIR}/bin:$PATH"
 
-RUN virtualenv -p python3.8 --always-copy ${ECOMMERCE_VENV_DIR}
+RUN virtualenv -p python${PYTHON_VERSION} --always-copy ${ECOMMERCE_VENV_DIR}
 
 RUN pip install nodeenv
 
