@@ -14,6 +14,7 @@ from django.views.generic import TemplateView
 from django.views.i18n import JavaScriptCatalog
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from edx_django_utils.plugins import get_plugin_url_patterns
 from rest_framework import permissions
 
 from ecommerce.core import views as core_views
@@ -84,6 +85,9 @@ urlpatterns = AUTH_URLS + WELL_KNOWN_URLS + [
 
 # Install Oscar extension URLs
 urlpatterns += extensions_patterns
+
+# Install plugin URLs
+urlpatterns.extend(get_plugin_url_patterns('ecommerce'))
 
 robots = TemplateView.as_view(template_name='robots.txt', content_type='text/plain')
 urlpatterns += [
